@@ -17,6 +17,7 @@ GRAY = (207, 185, 151)
 
 black_queen = pygame.image.load('c:/Users/skace/OneDrive/Dokumenty/Chess/check/assets/black queen.png')
 black_queen = pygame.transform.scale(black_queen, (90, 90))
+print(4)
 
 black_king = pygame.image.load('c:/Users/skace/OneDrive/Dokumenty/Chess/check/assets/black king.png')
 black_king = pygame.transform.scale(black_king, (90, 90))

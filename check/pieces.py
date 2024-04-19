@@ -10,6 +10,8 @@ class Pawn():
         self.col = col
         self.colour = colour
         self.is_king = False
+        self.is_rook = False
+        self.is_pawn = True
 
     def draw(self, win):
         if self.colour == WHITE:
@@ -49,17 +51,10 @@ class Pawn():
                     if board_list[self.row+1][self.col+1].colour != self.colour:
                         self.valid_moves.append((self.row+1,self.col+1))
 
-        self.end_of_journey(board_list)
+        
         return self.valid_moves
     
-    def end_of_journey(self, board_list):
-        if self.colour == WHITE:
-            if self.row == 0:
-                board_list[self.row][self.col] = Queen(self.row, self.col, self.colour)
-                
-        else:
-            if self.row ==7:
-                board_list[self.row][self.col] = Queen(self.row, self.col, self.colour)
+
                 
                 
                    
@@ -73,6 +68,9 @@ class Rook():
         self.col = col
         self.colour = colour
         self.is_king = False
+        self.moved = False
+        self.is_rook = True
+        self.is_pawn = False
 
     def draw(self, win):
         if self.colour == WHITE:
@@ -127,7 +125,8 @@ class Rook():
                 self.streak = False
             else:
                 self.streak = False
-
+            
+        
         return self.valid_moves
         
 
@@ -140,6 +139,8 @@ class Bishop():
         self.col = col
         self.colour = colour
         self.is_king = False
+        self.is_rook = False
+        self.is_pawn = False
 
     def draw(self, win):
         if self.colour == WHITE:
@@ -201,6 +202,8 @@ class Knight():
         self.col = col
         self.colour = colour
         self.is_king = False
+        self.is_rook = False
+        self.is_pawn = False
 
     def draw(self, win):
         if self.colour == WHITE:
@@ -263,6 +266,8 @@ class Queen():
         self.col = col
         self.colour = colour
         self.is_king = False
+        self.is_rook = False
+        self.is_pawn = False
 
 
     def draw(self, win):
@@ -375,6 +380,9 @@ class King():
         self.col = col
         self.colour = colour
         self.is_king = True
+        self.moved = False
+        self.is_rook = False
+        self.is_pawn = False
 
 
     def draw(self, win):
@@ -427,11 +435,39 @@ class King():
                 self.valid_moves.append((self.row+1, self.col+1))
             elif board_list[self.row+1][self.col+1].colour != self.colour:
                 self.valid_moves.append((self.row+1, self.col+1))
+
         
-    
         
-        
+
         return self.valid_moves
+
+
+    def can_you_castle(self, board_list):
+        if not self.moved:
+            if board_list[self.row][self.col+1] == 0 and board_list[self.row][self.col+2] == 0:
+                if board_list[self.row][self.col+3] != 0 and board_list[self.row][self.col+3].is_rook:
+                    print('it is a rook')
+                    if not board_list[self.row][self.col+3].moved:
+                        print('rook hasnt mooved')
+                        enemy = self.get_enemy_moves(board_list)
+                        if not board_list[self.row][self.col] in enemy and not board_list[self.row][self.col+1] in enemy and not board_list[self.row][self.col+2] in enemy:
+                            self.valid_moves.append((self.row, self.col+2))
+                            print('you can castle', self.colour)
+
+            if board_list[self.row][self.col-1] == 0 and board_list[self.row][self.col-2] == 0 and board_list[self.row][self.col-3] == 0:
+                if board_list[self.row][self.col-4] != 0 and board_list[self.row][self.col-4].is_rook:
+                    if not board_list[self.row][self.col-4].moved:
+                        enemy = self.get_enemy_moves(board_list)
+                        if not board_list[self.row][self.col] in enemy and not board_list[self.row][self.col-1] in enemy and not board_list[self.row][self.col-2] in enemy and not board_list[self.row][self.col-3] in enemy:                            
+                            self.valid_moves.append((self.row, self.col-2))
+                            print('you can castle', self.colour)
+            
+        else:
+            print('you cant castle',self.colour)
+
+
+        
+            
 
 
     def killable_king(self, board_list, row, col, selected_piece):
@@ -448,13 +484,7 @@ class King():
 
         
 
-        for r in self.imaginary_board:
-            for piece in r:
-                if piece != 0:
-                    if piece.colour != self.colour:
-                        what_he_can_take = piece.get_valid_moves(self.imaginary_board)
-                        for square in what_he_can_take:
-                            self.enemy_moves.append(square)
+        self.get_enemy_moves(self.imaginary_board)
         if self.selected_piece.is_king:
             pos = (self.selected_piece.row, self.selected_piece.col)
         
@@ -472,3 +502,14 @@ class King():
             self.enemy_moves = []
             return False
         
+    def get_enemy_moves(self, board_list):
+        self.enemy_moves = []
+        for row in board_list:
+            for piece in row:
+                if piece != 0:
+                    if piece.colour != self.colour:
+                        possibilities = piece.get_valid_moves(board_list)
+                        for option in possibilities:
+                            self.enemy_moves.append(option)
+
+        return self.enemy_moves

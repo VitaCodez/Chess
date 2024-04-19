@@ -25,8 +25,8 @@ class Game():
                         self.board.board_list[row][col] = self.selected_piece
                         self.board.board_list[self.selected_piece.row][self.selected_piece.col-1] =  self.board.board_list[self.selected_piece.row][self.selected_piece.col-4]
                         self.board.board_list[self.selected_piece.row][self.selected_piece.col-1].col = 3 
-                        self.board.board_list[self.selected_piece.row][self.selected_piece.col] = 0
-                        self.board.board_list[self.selected_piece.row][self.selected_piece.col+3] = 0
+                        self.board.board_list[self.selected_piece.row][self.selected_piece.col-4] = 0
+                        self.board.board_list[self.selected_piece.row][self.selected_piece.col] = 0     
                         self.selected_piece.row = row
                         self.selected_piece.col = col
                         self.change_turn()
@@ -36,8 +36,8 @@ class Game():
                         self.board.board_list[row][col] = self.selected_piece
                         self.board.board_list[self.selected_piece.row][self.selected_piece.col+1] =  self.board.board_list[self.selected_piece.row][self.selected_piece.col+3]
                         self.board.board_list[self.selected_piece.row][self.selected_piece.col+1].col = 5
+                        self.board.board_list[self.selected_piece.row][self.selected_piece.col+3] = 0
                         self.board.board_list[self.selected_piece.row][self.selected_piece.col] = 0
-                        self.board.board_list[self.selected_piece.row][self.selected_piece.col-4] = 0
                         self.selected_piece.row = row
                         self.selected_piece.col = col
                         self.change_turn()

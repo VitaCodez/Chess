@@ -446,24 +446,21 @@ class King():
         if not self.moved:
             if board_list[self.row][self.col+1] == 0 and board_list[self.row][self.col+2] == 0:
                 if board_list[self.row][self.col+3] != 0 and board_list[self.row][self.col+3].is_rook:
-                    print('it is a rook')
-                    if not board_list[self.row][self.col+3].moved:
-                        print('rook hasnt mooved')
+                    if not board_list[self.row][self.col+3].moved:                       
                         enemy = self.get_enemy_moves(board_list)
-                        if not board_list[self.row][self.col] in enemy and not board_list[self.row][self.col+1] in enemy and not board_list[self.row][self.col+2] in enemy:
+                        
+                        if not (self.row,self.col) in enemy and not (self.row,self.col+1) in enemy and not (self.row,self.col+2) in enemy:
                             self.valid_moves.append((self.row, self.col+2))
-                            print('you can castle', self.colour)
 
             if board_list[self.row][self.col-1] == 0 and board_list[self.row][self.col-2] == 0 and board_list[self.row][self.col-3] == 0:
                 if board_list[self.row][self.col-4] != 0 and board_list[self.row][self.col-4].is_rook:
                     if not board_list[self.row][self.col-4].moved:
                         enemy = self.get_enemy_moves(board_list)
-                        if not board_list[self.row][self.col] in enemy and not board_list[self.row][self.col-1] in enemy and not board_list[self.row][self.col-2] in enemy and not board_list[self.row][self.col-3] in enemy:                            
+                        
+                        if not (self.row,self.col) in enemy and not (self.row,self.col-1) in enemy and not (self.row,self.col-2) in enemy and not (self.row,self.col-3) in enemy:                            
                             self.valid_moves.append((self.row, self.col-2))
-                            print('you can castle', self.colour)
+
             
-        else:
-            print('you cant castle',self.colour)
 
 
         

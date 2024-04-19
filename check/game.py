@@ -9,6 +9,7 @@ class Game():
         self.win = win
         self.board = Board(self.win)
         self.valid_moves = []
+        self.enpassant_pieces = []
         self.selected_piece = 0
         self.turn = WHITE
         self.black_king = self.find_king(BLACK)
@@ -41,12 +42,42 @@ class Game():
                         self.selected_piece.row = row
                         self.selected_piece.col = col
                         self.change_turn()
+                    
+                    elif self.selected_piece.is_pawn: 
+                        if self.selected_piece.row == 3 and self.selected_piece.colour == WHITE:
+                            if self.board.board_list[row+1][col] != 0:
+                                if self.board.board_list[row+1][col].is_pawn and self.board.board_list[row+1][col].enpassant:
+                                    self.board.board_list[row][col] = self.selected_piece
+                                    self.board.board_list[self.selected_piece.row][self.selected_piece.col] = 0
+                                    self.board.board_list[row+1][col] = 0
+                                    self.selected_piece.row = row
+                                    self.selected_piece.col = col
+                                    self.change_turn()
+                                else:
+                                    self.normal_move(row, col)                           
+                            else:
+                                self.normal_move(row, col)
+                        elif self.selected_piece.row == 4 and self.selected_piece.colour == BLACK:
+                            if self.board.board_list[row-1][col] != 0:
+                                if self.board.board_list[row-1][col].is_pawn and self.board.board_list[row-1][col].enpassant:
+                                    self.board.board_list[row][col] = self.selected_piece
+                                    self.board.board_list[self.selected_piece.row][self.selected_piece.col] = 0
+                                    self.board.board_list[row-1][col] = 0
+                                    self.selected_piece.row = row
+                                    self.selected_piece.col = col
+                                    self.change_turn()
+                                else:
+                                    self.normal_move(row, col)   
+                            else:
+                                self.normal_move(row, col)
+                        else:
+                            if self.selected_piece.row+2 == row or self.selected_piece.row-2 == row:
+                                self.selected_piece.enpassant = 2
+                                self.enpassant_pieces.append(self.selected_piece)
+                            self.normal_move(row, col)
+                        
                     else:
-                        self.board.board_list[row][col] = self.selected_piece
-                        self.board.board_list[self.selected_piece.row][self.selected_piece.col] = 0
-                        self.selected_piece.row = row
-                        self.selected_piece.col = col
-                        self.change_turn()
+                        self.normal_move(row, col)
                 else:
                     self.selected_piece = 0
             else:
@@ -85,9 +116,23 @@ class Game():
             if piece != 0 and piece.colour == BLACK:
                 if piece.is_pawn:
                     piece = Queen(piece.row, piece.col, piece.colour)
+
+        for pawn in self.enpassant_pieces:
+            if pawn.enpassant == 0:
+                self.enpassant_pieces.remove(pawn)
+            else:
+                pawn.enpassant = pawn.enpassant-1
+
+            
     
                 
-            
+    def normal_move(self, row, col):
+        self.board.board_list[row][col] = self.selected_piece
+        self.board.board_list[self.selected_piece.row][self.selected_piece.col] = 0
+        self.selected_piece.row = row
+        self.selected_piece.col = col
+        self.change_turn()      
+        
         
 
 

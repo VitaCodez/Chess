@@ -12,6 +12,7 @@ class Pawn():
         self.is_king = False
         self.is_rook = False
         self.is_pawn = True
+        self.enpassant = 0
 
     def draw(self, win):
         if self.colour == WHITE:
@@ -36,6 +37,13 @@ class Pawn():
                 if board_list[self.row-1][self.col+1] != 0:
                     if board_list[self.row-1][self.col+1].colour != self.colour:
                         self.valid_moves.append((self.row-1,self.col+1))
+            if self.row == 3:
+                if board_list[self.row][self.col-1] != 0:
+                    if not self.col -1 < 0 and board_list[self.row][self.col-1].is_pawn and board_list[self.row][self.col-1].enpassant:
+                        self.valid_moves.append((self.row-1, self.col-1))
+                elif board_list[self.row][self.col-1] != 0:
+                    if not self.col +1 >= COLS and board_list[self.row][self.col+1].is_pawn and board_list[self.row][self.col+1].enpassant:
+                        self.valid_moves.append((self.row-1, self.col-1))
         elif not (self.row+1) >= ROWS:
             if board_list[self.row+1][self.col] == 0:
                 self.valid_moves.append((self.row+1,self.col))
@@ -50,6 +58,13 @@ class Pawn():
                 if board_list[self.row+1][self.col+1] != 0:
                     if board_list[self.row+1][self.col+1].colour != self.colour:
                         self.valid_moves.append((self.row+1,self.col+1))
+            if self.row == 4:
+                if board_list[self.row][self.col-1] != 0:
+                    if not self.col -1 < 0 and board_list[self.row][self.col-1].is_pawn and board_list[self.row][self.col-1].enpassant:
+                        self.valid_moves.append((self.row+1, self.col-1))
+                elif board_list[self.row][self.col-1] != 0:
+                    if not self.col +1 >= COLS and board_list[self.row][self.col+1].is_pawn and board_list[self.row][self.col+1].enpassant:
+                        self.valid_moves.append((self.row+1, self.col+1))
 
         
         return self.valid_moves
